@@ -1,8 +1,8 @@
 <script setup>
-import {useRoute, useRouter} from "vue-router";
-import VButton from "@/components/VButton.vue";
+import { useRouter } from 'vue-router'
+import VButton from '@/components/VButton.vue'
 
-const router = useRouter();
+const router = useRouter()
 const goToQuiz = () => {
   router.push('/quiz')
 }
@@ -12,13 +12,18 @@ const goToQuiz = () => {
   <div class="page">
     <div class="page-container">
       <div class="container-picture">
-        <img class="picture" src="/img/photo_19_2024-11-11_13-22-23.jpg" alt="Dora">
+        <img
+          class="picture"
+          src="/img/photo_19_2024-11-11_13-22-23.jpg"
+          alt="Dora"
+        />
       </div>
 
       <div class="quiz-content">
         <h2 class="title">Как хорошо ты знаешь Дору?</h2>
         <p class="description">
-          Эта викторина сможет отлично показать насколько хорошо вы знаете певицу Дору, приятного прохождения!
+          Эта викторина сможет отлично показать насколько хорошо вы знаете
+          певицу Дору, приятного прохождения!
         </p>
         <span class="question-count">10 вопросов</span>
       </div>

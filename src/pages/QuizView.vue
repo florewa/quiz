@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import {computed, onMounted, ref} from 'vue'
 import VButton from '@/components/VButton.vue'
 
 const questions = ref([
@@ -51,7 +51,7 @@ const questions = ref([
   },
   {
     question:
-      'Как называется группа, в составе которой Дора исполняла песни до сольной карьеры?',
+        'Как называется группа, в составе которой Дора исполняла песни до сольной карьеры?',
     image: '/img/photo_25_2024-11-11_13-22-23.jpg',
     answers: ['Френды', 'Нервы', 'Пошлая Молли', 'Мейкап Дора'],
     correctAnswer: 3,
@@ -95,8 +95,8 @@ const selectAnswer = (index) => {
 
 const nextQuestion = () => {
   if (
-    selectedAnswerIndex.value ===
-    questions.value[currentQuestionIndex.value].correctAnswer
+      selectedAnswerIndex.value ===
+      questions.value[currentQuestionIndex.value].correctAnswer
   ) {
     score.value++
   }
@@ -123,142 +123,197 @@ const restartQuiz = () => {
 
 <template>
   <div class="page">
-    <div class="page-container">
-      <div v-if="!isQuizFinished" class="page-container">
-        <div class="counter">
-          {{ currentQuestionIndex + 1 }}/ {{ questions.length }}
-        </div>
-        <div class="container-picture">
-          <img
+    <div v-if="!isQuizFinished" class="page-container">
+      <div class="counter">
+        {{ currentQuestionIndex + 1 }}/ {{ questions.length }}
+      </div>
+      <div class="container-picture">
+        <img
             :src="questions[currentQuestionIndex].image"
             alt="Quiz Image"
             class="picture"
-          />
+        />
+      </div>
+      <div class="quiz-container">
+        <div class="title">
+          {{ questions[currentQuestionIndex].question }}
         </div>
-        <div class="quiz-container">
-          <div class="title">
-            {{ questions[currentQuestionIndex].question }}
-          </div>
-          <div class="answers">
-            <button
+        <div class="answers">
+          <button
               v-for="(answer, index) in questions[currentQuestionIndex].answers"
               :key="index"
               @click="selectAnswer(index)"
               class="answer"
-            >
-              {{ answer }}
-            </button>
-          </div>
-          <VButton
+          >
+            {{ answer }}
+          </button>
+        </div>
+        <VButton
             class="button-next"
             name="Дальше"
             @click="nextQuestion"
             :disabled="!isAnswerSelected"
             :class="{ disabled: !isAnswerSelected }"
-          />
-        </div>
+        />
       </div>
-      <div v-else class="finish-container">
-        <div class="score">
-          Ваш результат: {{ score }} из {{ questions.length }}
-        </div>
-        <VButton
+    </div>
+    <div v-else class="finish-container">
+      <div class="score">
+        Ваш результат: {{ score }} из {{ questions.length }}
+      </div>
+      <img :src="score === 10 ? '/img/secret.png' : '/img/photo_21_2024-11-11_13-22-23.jpg'" alt="" class="finish-img">
+      <VButton
           class="restart-button"
           name="Пройти заново"
           @click="restartQuiz"
-        />
-      </div>
+      />
     </div>
   </div>
 </template>
 
 <style scoped lang="scss">
-.page-container {
-  flex-direction: row;
-  gap: 30px;
+.page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f5f5f5;
 
-  .counter {
-    font-size: 18px;
-    color: #e9e9e9;
-  }
-
-  .quiz-container {
+  .page-container {
     display: flex;
     flex-direction: column;
-    gap: 60px;
+    align-items: center;
+    width: 100%;
+    max-width: 600px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   }
 
   .finish-container {
     display: flex;
     flex-direction: column;
-    gap: 50px;
-    margin: 0 auto;
     align-items: center;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 30px;
+    max-width: 500px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+
+    .finish-img {
+      width: 100%;
+      margin-bottom: 20px;
+    }
 
     .score {
-      font-size: 30px;
-      color: #e9e9e9;
+      font-size: 24px;
+      color: #333;
+      margin-bottom: 20px;
     }
 
     .restart-button {
-      background-color: #ff6600;
+      background-color: #ff5722;
       color: #fff;
-      margin-top: 30px;
-      border-radius: 30px;
       font-weight: bold;
-      font-size: 24px;
-      width: 500px;
-      height: 60px;
+      font-size: 18px;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
 
       &:hover {
-        background: #30626b;
+        background-color: #e64a19;
       }
     }
   }
 
-  .title {
-    margin-top: 20px;
-    font-size: 30px;
-    color: #e9e9e9;
-  }
-
-  .answers {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-
-    .answer {
-      padding: 20px;
-      background-color: #212b36;
-      border-radius: 18px;
-      color: #e9e9e9;
-      transition: 0.3s all ease;
-
-      &:hover {
-        background: #30626b;
-      }
-
-      &:focus {
-        background: #1c6b72;
-      }
-    }
-  }
-
-  .button-next {
+  .counter {
+    font-size: 20px;
+    color: #fff;
+    background-color: #ff5722;
     padding: 20px;
-    background-color: #212b36;
-    border-radius: 18px;
-    color: #e9e9e9;
-    transition: 0.3s all ease;
+    border-radius: 12px;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+  }
 
-    &:hover {
-      background: #30626b;
+  .container-picture {
+    width: 100%;
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    overflow: hidden;
+
+    .picture {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 8px 8px 0 0;
+      object-position: top;
+    }
+  }
+
+  .quiz-container {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 20px;
+    padding: 20px;
+
+    .title {
+      font-size: 20px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 15px;
     }
 
-    &.disabled {
-      background-color: #aaa;
-      opacity: 0.6;
+    .answers {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-bottom: 20px;
+
+      .answer {
+        padding: 12px;
+        background-color: #f0f0f0;
+        border-radius: 5px;
+        color: #333;
+        cursor: pointer;
+        transition: 0.3s all ease;
+
+        &:hover {
+          background-color: #ddd;
+        }
+
+        &:focus {
+          background-color: #ccc;
+        }
+      }
+    }
+
+    .button-next {
+      width: 100%;
+      max-width: 200px;
+      padding: 10px;
+      font-size: 16px;
+      color: #fff;
+      background-color: #ff5722;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: #e64a19;
+      }
+
+      &.disabled {
+        background-color: #aaa;
+        opacity: 0.6;
+      }
     }
   }
 }
+
 </style>

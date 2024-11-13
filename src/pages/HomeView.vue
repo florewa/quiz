@@ -1,5 +1,5 @@
 <script setup>
-import { useRouter } from 'vue-router'
+import {useRouter} from 'vue-router'
 import VButton from '@/components/VButton.vue'
 
 const router = useRouter()
@@ -11,65 +11,100 @@ const goToQuiz = () => {
 <template>
   <div class="page">
     <div class="page-container">
-      <div class="container-picture">
+      <div class="picture-content">
         <img
-          class="picture"
-          src="/img/photo_19_2024-11-11_13-22-23.jpg"
-          alt="Dora"
+            class="picture"
+            src="/img/photo_20_2024-11-11_13-22-23.jpg"
+            alt="Dora"
         />
       </div>
-
       <div class="quiz-content">
         <h2 class="title">Как хорошо ты знаешь Дору?</h2>
         <p class="description">
           Эта викторина сможет отлично показать насколько хорошо вы знаете
           певицу Дору, приятного прохождения!
         </p>
-        <span class="question-count">10 вопросов</span>
+        <div class="question-count">10 вопросов</div>
+        <VButton class="start-button" name="Поехали!" @click="goToQuiz"></VButton>
       </div>
-
-      <VButton class="start-button" name="Поехали!" @click="goToQuiz"></VButton>
     </div>
   </div>
 </template>
 
 <style scoped lang="scss">
 .page {
-  .quiz-content {
-    text-align: center;
-    align-items: center;
-    margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+
+  &-container {
     display: flex;
-    gap: 13px;
     flex-direction: column;
+    align-items: center;
+    max-width: 600px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+}
 
-    .title {
-      font-size: 24px;
-      font-weight: bold;
-      color: #fff;
-    }
+.picture-content {
+  width: 100%;
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
 
-    .description {
-      font-size: 18px;
-      color: #b0b0b0;
-      width: 80%;
-    }
+  .picture {
+    border-radius: 8px 8px 0 0;
+    width: 100%;
+    object-fit: cover;
+    object-position: top;
+  }
+}
 
-    .question-count {
-      font-size: 20px;
-      color: #ffcc00;
-    }
+.quiz-content {
+  text-align: center;
+  margin-bottom: 20px;
+
+  .title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+  }
+
+  .description {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 15px;
+  }
+
+  .question-count {
+    font-size: 14px;
+    color: #888;
+    font-style: italic;
+    margin-bottom: 15px;
   }
 
   .start-button {
-    background-color: #ff6600;
+    width: 100%;
+    max-width: 200px;
+    padding: 10px;
+    font-size: 16px;
     color: #fff;
-    margin-top: 30px;
-    border-radius: 30px;
-    font-weight: bold;
-    font-size: 24px;
-    width: 500px;
-    height: 60px;
+    background-color: #ff5722;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: #e64a19;
+    }
   }
 }
 </style>
+

@@ -47,7 +47,7 @@ const questions = ref([
     question: 'В каком году Дора начала свою музыкальную карьеру?',
     image: '/img/photo_24_2024-11-11_13-22-23.jpg',
     answers: ['2015', '2018', '2020', '2021'],
-    correctAnswer: 1,
+    correctAnswer: 0,
   },
   {
     question:

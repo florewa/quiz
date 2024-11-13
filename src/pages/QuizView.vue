@@ -25,22 +25,22 @@ const questions = ref([
     image: '/img/photo_23_2024-11-11_13-22-23.jpg',
     answers: [
       'Влюблена',
-      'Не пришла на вечер',
+      'Я не коммерция',
       'Боже, храни кьют-рок',
       'Улыбнись',
     ],
-    correctAnswer: 2,
+    correctAnswer: 1,
   },
   {
     question: "С каким исполнителем Дора записала популярную песню 'Дорадура'?",
     image: '/img/photo_16_2024-11-11_13-22-23.jpg',
-    answers: ['Баста', 'Моргенштерн', 'Мэйби Бэйби', 'Pharaoh'],
+    answers: ['Мэйби Бэйби', 'Моргенштерн', 'Сольный трек', 'Pharaoh'],
     correctAnswer: 2,
   },
   {
     question: 'Какую из следующих песен НЕ исполняет Дора?',
     image: '/img/photo_20_2024-11-11_13-22-23.jpg',
-    answers: ['Втюрилась', 'Не Влюбляйся', 'Пацан', 'Богиня'],
+    answers: ['Втюрилась', 'Пошлю его на...', 'Капли', 'Богиня'],
     correctAnswer: 3,
   },
   {
@@ -53,13 +53,13 @@ const questions = ref([
     question:
         'Как называется группа, в составе которой Дора исполняла песни до сольной карьеры?',
     image: '/img/photo_25_2024-11-11_13-22-23.jpg',
-    answers: ['Френды', 'Нервы', 'Пошлая Молли', 'Мейкап Дора'],
+    answers: ['Френды', 'Нервы', 'Пошлая Молли', 'The Retuses'],
     correctAnswer: 3,
   },
   {
     question: 'В каком городе родилась Дора?',
     image: '/img/photo_13_2024-11-11_13-22-23.jpg',
-    answers: ['Санкт-Петербург', 'Новосибирск', 'Москва', 'Владивосток'],
+    answers: ['Санкт-Петербург', 'Саратов', 'Москва', 'Владивосток'],
     correctAnswer: 1,
   },
   {
@@ -161,7 +161,8 @@ const restartQuiz = () => {
       <div class="score">
         Ваш результат: {{ score }} из {{ questions.length }}
       </div>
-      <img :src="score === 10 ? '/img/secret.png' : '/img/photo_21_2024-11-11_13-22-23.jpg'" alt="" class="finish-img">
+      <img :src="score === 10 ? '/img/secret.png' : '/img/photo_21_2024-11-11_13-22-23.jpg'" alt=""
+           class="finish-img">
       <VButton
           class="restart-button"
           name="Пройти заново"

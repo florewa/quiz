@@ -1,5 +1,5 @@
 <script setup>
-import {computed, onMounted, ref} from 'vue'
+import {computed, ref} from 'vue'
 import VButton from '@/components/VButton.vue'
 
 const questions = ref([
@@ -80,70 +80,89 @@ const questions = ref([
     correctAnswer: 0,
   },
 ])
-const isQuizFinished = ref(false)
+
 const currentQuestionIndex = ref(0)
-const score = ref(0)
 const selectedAnswerIndex = ref(null)
-const isCorrect = ref(null)
-const isAnswerSelected = computed(() => selectedAnswerIndex.value !== null)
+const score = ref(0)
 const isAnswered = ref(false)
+const isQuizFinished = ref(false)
+const isLoading = ref(false)
+const isTransitionLoading = ref(false)
+
+const currentQuestion = computed(() => questions.value[currentQuestionIndex.value])
+const progressWidth = computed(() => `${((currentQuestionIndex.value + 1) / questions.value.length) * 100}%`)
+const isAnswerSelected = computed(() => selectedAnswerIndex.value !== null)
+
 const selectAnswer = (index) => {
   if (isAnswered.value) return
   selectedAnswerIndex.value = index
-  isAnswered.value = false
+  isAnswered.value = true
 }
 
 const nextQuestion = () => {
-  if (
-      selectedAnswerIndex.value ===
-      questions.value[currentQuestionIndex.value].correctAnswer
-  ) {
+  if (!isAnswered.value) return
+
+  if (selectedAnswerIndex.value === currentQuestion.value.correctAnswer) {
     score.value++
   }
 
-  console.log(score.value)
-
   if (currentQuestionIndex.value < questions.value.length - 1) {
     currentQuestionIndex.value++
-    selectedAnswerIndex.value = null
-    isAnswered.value = false
+    resetSelection()
   } else {
-    isQuizFinished.value = true
+    triggerFinishTransition()
   }
+}
+
+const triggerFinishTransition = () => {
+  isTransitionLoading.value = true
+  setTimeout(() => {
+    isTransitionLoading.value = false
+    isQuizFinished.value = true
+  }, 1000)
+}
+
+const resetSelection = () => {
+  selectedAnswerIndex.value = null
+  isAnswered.value = false
 }
 
 const restartQuiz = () => {
   currentQuestionIndex.value = 0
   score.value = 0
   isQuizFinished.value = false
-  selectedAnswerIndex.value = null
-  isCorrect.value = null
+  resetSelection()
+}
+
+const restartQuizWithDelay = () => {
+  isLoading.value = true
+  setTimeout(() => {
+    isLoading.value = false
+    restartQuiz()
+  }, 1000)
 }
 </script>
 
 <template>
   <div class="page">
-    <div v-if="!isQuizFinished" class="page-container">
-      <div class="counter">
-        {{ currentQuestionIndex + 1 }}/ {{ questions.length }}
+    <div v-if="isTransitionLoading" class="spinner-container">
+      <div class="spinner"></div>
+    </div>
+    <div v-else-if="!isQuizFinished" class="page-container">
+      <div class="progress-bar">
+        <div class="progress-bar-fill" :style="{ width: progressWidth }"></div>
       </div>
       <div class="container-picture">
-        <img
-            :src="questions[currentQuestionIndex].image"
-            alt="Quiz Image"
-            class="picture"
-        />
+        <img :src="currentQuestion.image" alt="Quiz Image" class="picture"/>
       </div>
       <div class="quiz-container">
-        <div class="title">
-          {{ questions[currentQuestionIndex].question }}
-        </div>
+        <div class="title">{{ currentQuestion.question }}</div>
         <div class="answers">
           <button
-              v-for="(answer, index) in questions[currentQuestionIndex].answers"
+              v-for="(answer, index) in currentQuestion.answers"
               :key="index"
               @click="selectAnswer(index)"
-              class="answer"
+              :class="['answer', { selected: index === selectedAnswerIndex }]"
           >
             {{ answer }}
           </button>
@@ -153,24 +172,28 @@ const restartQuiz = () => {
             name="Дальше"
             @click="nextQuestion"
             :disabled="!isAnswerSelected"
-            :class="{ disabled: !isAnswerSelected }"
         />
       </div>
     </div>
     <div v-else class="finish-container">
-      <div class="score">
-        Ваш результат: {{ score }} из {{ questions.length }}
+      <div v-if="isLoading" class="spinner"></div>
+      <div v-else class="finish">
+        <div class="score">Ваш результат: {{ score }} из {{ questions.length }}</div>
+        <img
+            :src="score === 10 ? '/img/secret.png' : '/img/photo_21_2024-11-11_13-22-23.jpg'"
+            alt="Результат"
+            class="finish-img"
+        />
+        <VButton
+            class="restart-button"
+            name="Пройти заново"
+            @click="restartQuizWithDelay"
+        />
       </div>
-      <img :src="score === 10 ? '/img/secret.png' : '/img/photo_21_2024-11-11_13-22-23.jpg'" alt=""
-           class="finish-img">
-      <VButton
-          class="restart-button"
-          name="Пройти заново"
-          @click="restartQuiz"
-      />
     </div>
   </div>
 </template>
+
 
 <style scoped lang="scss">
 .page {
@@ -179,6 +202,37 @@ const restartQuiz = () => {
   align-items: center;
   min-height: 100vh;
   background-color: #f5f5f5;
+
+  .spinner-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 600px;
+    height: 806px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #ff5722;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
 
   .page-container {
     display: flex;
@@ -195,14 +249,42 @@ const restartQuiz = () => {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     background-color: #fff;
     border-radius: 8px;
     padding: 30px;
-    max-width: 500px;
+    width: 600px;
+    height: 806px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 
+    .finish {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #ff5722;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      margin: 350px auto;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
     .finish-img {
-      width: 100%;
+      width: 95%;
       margin-bottom: 20px;
     }
 
@@ -228,15 +310,19 @@ const restartQuiz = () => {
     }
   }
 
-  .counter {
-    font-size: 20px;
-    color: #fff;
-    background-color: #ff5722;
-    padding: 20px;
-    border-radius: 12px;
-    position: absolute;
-    top: 20px;
-    right: 20px;
+  .progress-bar {
+    width: 95%;
+    height: 20px;
+    background-color: #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 20px 0;
+
+    .progress-bar-fill {
+      height: 100%;
+      background-color: #ff5722;
+      transition: width 0.3s ease-in-out;
+    }
   }
 
   .container-picture {
@@ -267,6 +353,7 @@ const restartQuiz = () => {
       font-weight: bold;
       color: #333;
       margin-bottom: 15px;
+      height: 60px;
     }
 
     .answers {

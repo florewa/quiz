@@ -44,8 +44,10 @@ const goToQuiz = () => {
     flex-direction: column;
     align-items: center;
     max-width: 600px;
+    height: 806px;
     background-color: #fff;
     border-radius: 8px;
+    gap: 150px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   }
 }
@@ -55,7 +57,6 @@ const goToQuiz = () => {
   height: 300px;
   display: flex;
   justify-content: center;
-  margin-bottom: 20px;
 
   .picture {
     border-radius: 8px 8px 0 0;
